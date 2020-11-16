@@ -30,13 +30,21 @@ export default function reducer(state = ReducerRecord, action) {
 
   switch (type) {
     case INIT_CURRENCY_TITLE_LIST:
-      return state['currencyList'] = payload
+      return Object.assign({}, state, {
+        currencyList: payload
+      })
     case FETCH_NEW_CURRENCY_LIST:
-      return state['activeCurrencies'] = payload
+      return Object.assign({}, state, {
+        activeCurrencies: payload
+      })
     case SAVE_ACTIVE_CURRENCY:
-      return state['saveCurrencies'] = payload
+      return Object.assign({}, state, {
+        saveCurrencies: payload
+      })
     case LOADING_DATA_SUCCESS:
-      return state['isLoading'] = payload
+      return Object.assign({}, state, {
+        isLoading: payload
+      })
     default:
       return state
   }
@@ -98,7 +106,7 @@ export function initCurrencyList() {
 
       dispatch({
         type: INIT_CURRENCY_TITLE_LIST,
-        payload: {list: listCurrencies, date: data.date}
+        payload: listCurrencies
       })
     })
   }
