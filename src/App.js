@@ -1,7 +1,15 @@
+import React, { useEffect } from "react"
 import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux'
+import {currencyListSelector, initCurrencyList} from './models/currency'
 
-function App() {
+function App({initCurrencyList}) {
+
+  useEffect(() => {
+    initCurrencyList()
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -22,4 +30,9 @@ function App() {
   );
 }
 
-export default App;
+export default connect(state => ({
+  currencyList: currencyListSelector(state)
+}), {
+  initCurrencyList
+})(App)
+
