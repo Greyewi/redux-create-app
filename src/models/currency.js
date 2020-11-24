@@ -98,16 +98,14 @@ export function getCurrencyData(payload) {
   }
 }
 
-export function initCurrencyList() {
-  return (dispatch) => {
-    const url = `https://api.exchangeratesapi.io/latest`
-    axios.get(url).then(({data}) => {
-      const listCurrencies = Object.keys(data.rates)
+export const initCurrencyList = () => (dispatch, getState) => {
+  const url = `https://api.exchangeratesapi.io/latest`
+  axios.get(url).then(({data}) => {
+    const listCurrencies = Object.keys(data.rates)
 
-      dispatch({
-        type: INIT_CURRENCY_TITLE_LIST,
-        payload: listCurrencies
-      })
+    dispatch({
+      type: INIT_CURRENCY_TITLE_LIST,
+      payload: listCurrencies
     })
-  }
+  })
 }
