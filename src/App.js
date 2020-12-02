@@ -2,6 +2,8 @@ import React, { useEffect } from "react"
 import './App.css';
 import { connect } from 'react-redux'
 import FormExample from './components/FormExample'
+import {Route, Switch} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 import {
   currencyListSelector,
@@ -21,10 +23,18 @@ function App({initCurrencyList, currencyList}) {
   return (
     <div className="App">
       <header className="App-header">
-        {/*{currencyList && currencyList.map((item, key) => {*/}
-        {/*  return (<div key={key}>{item}</div>)*/}
-        {/*})}*/}
-        <FormExample onSubmit={handleSubmit}/>
+        <Link to="/list">currency list</Link>
+        <Link to="/form">form</Link>
+        <Switch>
+          <Route path="/list" render={() =>
+            currencyList && currencyList.map((item, key) => {
+              return (<div key={key}>{item}</div>)
+            })
+          }/>
+          <Route path="/form" render={() => <FormExample onSubmit={handleSubmit}/>}/>
+        </Switch>
+
+
       </header>
     </div>
   );
