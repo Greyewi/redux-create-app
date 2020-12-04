@@ -9,7 +9,7 @@ import {
   initCurrencyList
 } from './models/currency'
 
-function App({initCurrencyList, currencyList, location}) {
+function App({initCurrencyList, currencyList}) {
 
   useEffect(() => {
     initCurrencyList()
@@ -30,7 +30,7 @@ function App({initCurrencyList, currencyList, location}) {
               return (<div key={key}>{item}</div>)
             })
           }/>
-          <Route path="/form" render={() => <FormExample initialData={location.query} onSubmit={handleSubmit}/>}/>
+          <Route path="/form" render={() => <FormExample onSubmit={handleSubmit}/>}/>
         </Switch>
 
 
@@ -40,8 +40,7 @@ function App({initCurrencyList, currencyList, location}) {
 }
 
 export default connect(state => ({
-  currencyList: currencyListSelector(state),
-  location: state.router.location
+  currencyList: currencyListSelector(state)
 }), {
   initCurrencyList
 })(App)

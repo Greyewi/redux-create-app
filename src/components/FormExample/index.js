@@ -1,13 +1,10 @@
-import React,{useEffect}  from "react"
+import React from "react"
 import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
 import validate from './validate'
 import warnings from './warnings'
 
-const FormExample = ({ handleSubmit, initialize, initialData }) => {
-
-  useEffect(() => {
-    initialize(initialData)
-  }, [initialize])
+let FormExample = ({ handleSubmit }) => {
 
   return <form onSubmit={handleSubmit}>
     <div>
@@ -26,8 +23,16 @@ const FormExample = ({ handleSubmit, initialize, initialData }) => {
   </form>
 }
 
-export default reduxForm({
+FormExample = reduxForm({
   form: 'example',
   validate,
   warnings
 })(FormExample)
+
+FormExample = connect(
+  state => ({
+    initialValues: state.router.location.query
+  })
+)(FormExample)
+
+export default FormExample
