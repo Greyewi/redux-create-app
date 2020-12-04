@@ -2,15 +2,14 @@ import React, { useEffect } from "react"
 import './App.css';
 import { connect } from 'react-redux'
 import FormExample from './components/FormExample'
-import {Route, Switch} from 'react-router-dom'
-import {Link} from 'react-router-dom'
+import {Route, Switch, Link} from 'react-router-dom'
 
 import {
   currencyListSelector,
   initCurrencyList
 } from './models/currency'
 
-function App({initCurrencyList, currencyList}) {
+function App({initCurrencyList, currencyList, location}) {
 
   useEffect(() => {
     initCurrencyList()
@@ -31,7 +30,7 @@ function App({initCurrencyList, currencyList}) {
               return (<div key={key}>{item}</div>)
             })
           }/>
-          <Route path="/form" render={() => <FormExample onSubmit={handleSubmit}/>}/>
+          <Route path="/form" render={() => <FormExample initialData={location.query} onSubmit={handleSubmit}/>}/>
         </Switch>
 
 
@@ -41,7 +40,8 @@ function App({initCurrencyList, currencyList}) {
 }
 
 export default connect(state => ({
-  currencyList: currencyListSelector(state)
+  currencyList: currencyListSelector(state),
+  location: state.router.location
 }), {
   initCurrencyList
 })(App)
