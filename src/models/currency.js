@@ -8,7 +8,8 @@ import axios from 'axios'
 export const moduleName = 'currency'
 const prefix = moduleName
 
-export const INIT_CURRENCY_TITLE_LIST = `${prefix}/INIT_CURRENCY_TITLE_LIST`
+export const INIT_CURRENCY_TITLE_LIST_REQUEST = `${prefix}/INIT_CURRENCY_TITLE_LIST_REQUEST`
+export const INIT_CURRENCY_TITLE_LIST_SUCCESS = `${prefix}/INIT_CURRENCY_TITLE_LIST_SUCCESS`
 export const FETCH_NEW_CURRENCY_LIST = `${prefix}/FETCH_NEW_CURRENCY_LIST`
 export const SAVE_ACTIVE_CURRENCY = `${prefix}/SAVE_ACTIVE_CURRENCY`
 export const REMOVE_SAVED_CURRENCY = `${prefix}/REMOVE_SAVED_CURRENCY`
@@ -29,7 +30,7 @@ export default function reducer(state = ReducerRecord, action) {
   const {type, payload} = action
 
   switch (type) {
-    case INIT_CURRENCY_TITLE_LIST:
+    case INIT_CURRENCY_TITLE_LIST_SUCCESS:
       return Object.assign({}, state, {
         currencyList: payload
       })
@@ -98,14 +99,6 @@ export function getCurrencyData(payload) {
   }
 }
 
-export const initCurrencyList = () => (dispatch, getState) => {
-  const url = `https://api.exchangeratesapi.io/latest`
-  axios.get(url).then(({data}) => {
-    const listCurrencies = Object.keys(data.rates)
-
-    dispatch({
-      type: INIT_CURRENCY_TITLE_LIST,
-      payload: listCurrencies
-    })
-  })
-}
+export const initCurrencyList = () => ({
+  type: INIT_CURRENCY_TITLE_LIST_REQUEST,
+})
