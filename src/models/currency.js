@@ -20,41 +20,41 @@ export const LOADING_DATA_ERROR = `${prefix}/LOADING_DATA_ERROR`
  * */
 
 export const ReducerRecord = {
-  currencyList: null,
-  activeCurrencies: null,
-  saveCurrencies: [],
-  isLoading: false,
-  loadingError: null
+    currencyList: [],
+    activeCurrencies: null,
+    saveCurrencies: [],
+    isLoading: false,
+    loadingError: null
 }
 
 export default function reducer(state = ReducerRecord, action) {
-  const {type, payload} = action
+    const {type, payload} = action
 
-  switch (type) {
-    case INIT_CURRENCY_TITLE_LIST:
-      return Object.assign({}, state, {
-        currencyList: payload
-      })
-    case FETCH_NEW_CURRENCY_LIST:
-      return Object.assign({}, state, {
-        activeCurrencies: payload
-      })
-    case SAVE_ACTIVE_CURRENCY:
-      return Object.assign({}, state, {
-        saveCurrencies: payload
-      })
-    case LOADING_DATA_SUCCESS:
-      return Object.assign({}, state, {
-        isLoading: payload
-      })
-    case LOADING_DATA_ERROR:
-      return Object.assign({}, state, {
-        //currencyList: [],
-        loadingError: payload
-      })
-    default:
-      return state
-  }
+    switch (type) {
+        case INIT_CURRENCY_TITLE_LIST:
+            return Object.assign({}, state, {
+                currencyList: payload
+            })
+        case FETCH_NEW_CURRENCY_LIST:
+            return Object.assign({}, state, {
+                activeCurrencies: payload
+            })
+        case SAVE_ACTIVE_CURRENCY:
+            return Object.assign({}, state, {
+                saveCurrencies: payload
+            })
+        case LOADING_DATA_SUCCESS:
+            return Object.assign({}, state, {
+                isLoading: payload
+            })
+        case LOADING_DATA_ERROR:
+            return Object.assign({}, state, {
+                loadingError: payload,
+                currencyList: ['connection error, try it again']
+            })
+        default:
+            return state
+    }
 }
 
 /**
@@ -73,57 +73,56 @@ export const loadingErrorSelector = createSelector(stateSelector, state => state
  * */
 
 export function removeActiveCurrency(payload) {
-  return (dispatch) => {
-    localStorage.removeItem(payload)
-    dispatch({
-      type: REMOVE_SAVED_CURRENCY,
-      payload: localStorage
-    })
-  }
+    return (dispatch) => {
+        localStorage.removeItem(payload)
+        dispatch({
+            type: REMOVE_SAVED_CURRENCY,
+            payload: localStorage
+        })
+    }
 }
 
 export function saveActiveCurrency(payload) {
-  return (dispatch, getState) => {
-    const {currencyList} = getState()
-    localStorage.setItem(currencyList.base, JSON.stringify(currencyList))
+    return (dispatch, getState) => {
+        const {currencyList} = getState()
+        localStorage.setItem(currencyList.base, JSON.stringify(currencyList))
 
-    dispatch({
-      type: SAVE_ACTIVE_CURRENCY,
-      payload: localStorage
-    })
-  }
+        dispatch({
+            type: SAVE_ACTIVE_CURRENCY,
+            payload: localStorage
+        })
+    }
 }
 
 export function getCurrencyData(payload) {
-  return (dispatch) => {
-    const url = `https://api.dddd.exchangeratesapi.io/latest?base=${payload}`
-    axios.get(url).then(({data}) => {
-      if(data.data){
-        dispatch({
-          type: FETCH_NEW_CURRENCY_LIST,
-          payload: data
+    return (dispatch) => {
+        const url = `https://api.exchangeratesapi.io/latest?base=${payload}`
+        axios.get(url).then(({data}) => {
+            dispatch({
+                type: FETCH_NEW_CURRENCY_LIST,
+                payload: data
+            })
         })
-      }
-      else{
-        dispatch({
-          type: LOADING_DATA_ERROR,
-          payload: Error
-        })
-      }
-
-
-    })
-  }
+    }
 }
 
 export const initCurrencyList = () => (dispatch, getState) => {
-  const url = `https://api.exchangeratesapi.io/latest`
-  axios.get(url).then(({data}) => {
-    const listCurrencies = Object.keys(data.rates)
-
-    dispatch({
-      type: INIT_CURRENCY_TITLE_LIST,
-      payload: listCurrencies
+    const url = `https://api.exchangeratesapi.io/latest`
+    axios.get(url).then(({data}) => {
+        const listCurrencies = Object.keys(data.rates)
+        dispatch({
+            type: INIT_CURRENCY_TITLE_LIST,
+            payload: listCurrencies
+        })
+    }).catch(function (error) {
+        dispatch({
+            type: LOADING_DATA_ERROR,
+            payload: error
+        })
     })
-  })
 }
+
+
+
+
+
