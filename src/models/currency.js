@@ -13,6 +13,7 @@ export const FETCH_NEW_CURRENCY_LIST = `${prefix}/FETCH_NEW_CURRENCY_LIST`
 export const SAVE_ACTIVE_CURRENCY = `${prefix}/SAVE_ACTIVE_CURRENCY`
 export const REMOVE_SAVED_CURRENCY = `${prefix}/REMOVE_SAVED_CURRENCY`
 export const LOADING_DATA_SUCCESS = `${prefix}/LOADING_DATA_SUCCESS`
+export const LOADING_DATA_ERROR = `${prefix}/LOADING_DATA_ERROR`
 
 /**
  * Reducer
@@ -22,7 +23,8 @@ export const ReducerRecord = {
   currencyList: null,
   activeCurrencies: null,
   saveCurrencies: [],
-  isLoading: false
+  isLoading: false,
+  loadingError: null
 }
 
 export default function reducer(state = ReducerRecord, action) {
@@ -45,6 +47,11 @@ export default function reducer(state = ReducerRecord, action) {
       return Object.assign({}, state, {
         isLoading: payload
       })
+    case LOADING_DATA_ERROR:
+      return Object.assign({}, state, {
+        //currencyList: [],
+        loadingError: payload
+      })
     default:
       return state
   }
@@ -59,6 +66,7 @@ export const currencyListSelector = createSelector(stateSelector, state => state
 export const isLoadingSelector = createSelector(stateSelector, state => state.isLoading)
 export const activeCurrenciesSelector = createSelector(stateSelector, state => state.activeCurrencies)
 export const saveCurrenciesSelector = createSelector(stateSelector, state => state.saveCurrencies)
+export const loadingErrorSelector = createSelector(stateSelector, state => state.loadingError)
 
 /**
  * Redux thunks
@@ -88,12 +96,22 @@ export function saveActiveCurrency(payload) {
 
 export function getCurrencyData(payload) {
   return (dispatch) => {
-    const url = `https://api.exchangeratesapi.io/latest?base=${payload}`
+    const url = `https://api.dddd.exchangeratesapi.io/latest?base=${payload}`
     axios.get(url).then(({data}) => {
-      dispatch({
-        type: FETCH_NEW_CURRENCY_LIST,
-        payload: data
-      })
+      if(data.data){
+        dispatch({
+          type: FETCH_NEW_CURRENCY_LIST,
+          payload: data
+        })
+      }
+      else{
+        dispatch({
+          type: LOADING_DATA_ERROR,
+          payload: Error
+        })
+      }
+
+
     })
   }
 }

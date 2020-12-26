@@ -21,9 +21,9 @@ function App({initCurrencyList, currencyList}) {
   return (
     <div className="App">
       <header className="App-header">
-        {/*{currencyList && currencyList.map((item, key) => {*/}
-        {/*  return (<div key={key}>{item}</div>)*/}
-        {/*})}*/}
+        {currencyList && currencyList.map((item, key) => {
+          return (<div key={key}>{item}</div>)
+        })}
         <FormExample onSubmit={handleSubmit}/>
       </header>
     </div>
