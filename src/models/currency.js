@@ -20,7 +20,7 @@ export const LOADING_DATA_ERROR = `${prefix}/LOADING_DATA_ERROR`
  * */
 
 export const ReducerRecord = {
-    currencyList: [],
+    currencyList: null,
     activeCurrencies: null,
     saveCurrencies: [],
     isLoading: false,
@@ -50,7 +50,7 @@ export default function reducer(state = ReducerRecord, action) {
         case LOADING_DATA_ERROR:
             return Object.assign({}, state, {
                 loadingError: payload,
-                currencyList: ['connection error, try it again']
+                //currencyList: ['connection error, try it again']
             })
         default:
             return state
@@ -102,12 +102,19 @@ export function getCurrencyData(payload) {
                 type: FETCH_NEW_CURRENCY_LIST,
                 payload: data
             })
+        }).catch((error)=> {
+            console.log("this is error"+error)
+            dispatch({
+                type: LOADING_DATA_ERROR,
+                payload: error.message
+            })
+
         })
     }
 }
 
 export const initCurrencyList = () => (dispatch, getState) => {
-    const url = `https://api.exchangeratesapi.io/latest`
+    const url = `https://api.exchangeratesapi.io/la222test`
     axios.get(url).then(({data}) => {
         const listCurrencies = Object.keys(data.rates)
         dispatch({
