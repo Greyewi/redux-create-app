@@ -3,13 +3,16 @@ import './App.css';
 import { connect } from 'react-redux'
 import FormExample from './components/FormExample'
 import {Route, Switch, Link} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import {
   currencyListSelector,
-  initCurrencyList
+  initCurrencyList,
+  itemsSelector,
+  getDemoItems
 } from './models/currency'
 
-function App({initCurrencyList, currencyList}) {
+let App = ({initCurrencyList, currencyList, history, items, getDemoItems}) => {
 
   useEffect(() => {
     initCurrencyList()
@@ -17,6 +20,7 @@ function App({initCurrencyList, currencyList}) {
 
   const handleSubmit = (data) => {
     console.log(data)
+    history.push('/')
   }
 
   return (
@@ -24,6 +28,11 @@ function App({initCurrencyList, currencyList}) {
       <header className="App-header">
         <Link to="/list">currency list</Link>
         <Link to="/form">form</Link>
+        <button onClick={() => getDemoItems()}>Set query</button>
+        {items && items.map((i) => {
+          return i.name
+        })}
+
         <Switch>
           <Route path="/list" render={() =>
             currencyList && currencyList.map((item, key) => {
@@ -33,15 +42,21 @@ function App({initCurrencyList, currencyList}) {
           <Route path="/form" render={() => <FormExample onSubmit={handleSubmit}/>}/>
         </Switch>
 
-
       </header>
     </div>
   );
 }
 
-export default connect(state => ({
-  currencyList: currencyListSelector(state)
+App = connect(state => ({
+  currencyList: currencyListSelector(state),
+  items: itemsSelector(state),
+
+
 }), {
-  initCurrencyList
+  initCurrencyList,
+  getDemoItems
 })(App)
 
+App = withRouter(App)
+
+export default App
