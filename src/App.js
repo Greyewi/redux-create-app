@@ -2,6 +2,7 @@ import React, {useEffect} from "react"
 import './App.css';
 import {connect} from 'react-redux'
 import FormExample from './components/FormExample'
+import Matrix from './components/Matrix'
 
 import {
     currencyListSelector,
@@ -27,10 +28,8 @@ function App({initCurrencyList, currencyList, loadingError}) {
                 {/*        return (<div key={key}>{item}</div>)*/}
                 {/*    })}*/}
                 {/*</div>*/}
-                <div>
-                {console.log(loadingError)}
-                </div>
                 {/*<FormExample onSubmit={handleSubmit}/>*/}
+                <Matrix/>
             </header>
         </div>
     );

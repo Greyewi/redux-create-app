@@ -114,7 +114,7 @@ export function getCurrencyData(payload) {
 }
 
 export const initCurrencyList = () => (dispatch, getState) => {
-    const url = `https://api.exchangeratesapi.io/la222test`
+    const url = `https://api.exchangeratesapi.io/latest`
     axios.get(url).then(({data}) => {
         const listCurrencies = Object.keys(data.rates)
         dispatch({
