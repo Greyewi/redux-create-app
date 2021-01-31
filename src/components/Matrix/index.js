@@ -5,13 +5,8 @@ import './style.scss'
 function Matrix() {
   const [line, setLine] = useState([[1, 0, 0, 0]])
 
-  const handleLeft = () => {
-    setLine([[1, 0, 0, 0]])
-  }
-
-  const handleRight = () => {
-    setLine([[0, 0, 0, 1]])
-  }
+  const handleLeft = () => setLine([[1, 0, 0, 0]])
+  const handleRight = () => setLine([[0, 0, 0, 1]])
 
   return (
     <div>
@@ -21,7 +16,7 @@ function Matrix() {
         <TransitionGroup className="todo-list">
           {line.map((item, key) => <CSSTransition
             key={item}
-            timeout={500}
+            timeout={100}
             classNames="item"
           >
             <span key={key}>{item}</span>
