@@ -3,18 +3,28 @@ import './App.css'
 import {connect} from 'react-redux'
 import FormExample from './components/FormExample'
 import Matrix from './components/Matrix'
-import {Route, Switch, Link} from 'react-router-dom'
-import { withRouter } from 'react-router-dom'
+import {Link, Route, Switch, withRouter} from 'react-router-dom'
 
 import {
+  activeCurrenciesSelector,
   currencyListSelector,
-  loadingErrorSelector,
+  getCurrencyData,
+  getDemoItems,
   initCurrencyList,
   itemsSelector,
-  getDemoItems,
+  loadingErrorSelector,
 } from './models/currency'
 
-let App = ({initCurrencyList, currencyList, history, items, getDemoItems, loadingError}) => {
+let App = ({
+             initCurrencyList,
+             currencyList,
+             history,
+             items,
+             getDemoItems,
+             loadingError,
+             getCurrencyData,
+             activeCurrencies
+}) => {
 
   useEffect(() => {
     initCurrencyList()
@@ -25,7 +35,7 @@ let App = ({initCurrencyList, currencyList, history, items, getDemoItems, loadin
     history.push('/')
   }
 
-  if(loadingError){
+  if (loadingError) {
     return <div className="App">
       <header className="App-header">
         {loadingError}
@@ -45,9 +55,22 @@ let App = ({initCurrencyList, currencyList, history, items, getDemoItems, loadin
         })}
 
         <Switch>
-          <Route path="/list" render={() =>
+          <Route path="/list" exact render={() =>
             currencyList && currencyList.map((item, key) => {
-              return (<div key={key}>{item}</div>)
+              return (
+                <Link key={key} to={`/list/:${item}`}>
+                  <div onClick={() => getCurrencyData(item)}>{item}</div>
+                </Link>
+              )
+            })
+          }/>
+          <Route path="/list/:currency" render={() =>
+            activeCurrencies && Object.keys(activeCurrencies).map((item, key) => {
+              return (
+                <Link className="App-link" key={key} to={`/list/:${item}`}>
+                  <div onClick={() => getCurrencyData(item)}>{item}: {activeCurrencies[item]}</div>
+                </Link>
+              )
             })
           }/>
           <Route path="/form" render={() => <FormExample onSubmit={handleSubmit}/>}/>
@@ -64,8 +87,10 @@ App = connect(state => ({
   currencyList: currencyListSelector(state),
   items: itemsSelector(state),
   loadingError: loadingErrorSelector(state),
+  activeCurrencies: activeCurrenciesSelector(state),
 }), {
   initCurrencyList,
+  getCurrencyData,
   getDemoItems
 })(App)
 
