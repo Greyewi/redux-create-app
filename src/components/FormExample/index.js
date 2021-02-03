@@ -1,14 +1,15 @@
-import React  from "react"
+import React from "react"
 import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
 import validate from './validate'
 import warnings from './warnings'
 
-const FormExample = ({ handleSubmit }) => {
+let FormExample = ({ handleSubmit }) => {
 
   return <form onSubmit={handleSubmit}>
     <div>
       <label htmlFor="firstName">First Name</label>
-      <Field name="firstName" component="input" type="text" />
+      <Field name="firstname" component="input" type="text" />
     </div>
     <div>
       <label htmlFor="age">Age</label>
@@ -22,8 +23,16 @@ const FormExample = ({ handleSubmit }) => {
   </form>
 }
 
-export default reduxForm({
+FormExample = reduxForm({
   form: 'example',
   validate,
   warnings
 })(FormExample)
+
+FormExample = connect(
+  state => ({
+    initialValues: state.router.location.query
+  })
+)(FormExample)
+
+export default FormExample
