@@ -58,7 +58,7 @@ let App = ({
           <Route path="/list" exact render={() =>
             currencyList && currencyList.map((item, key) => {
               return (
-                <Link key={key} to={`/list/:${item}`}>
+                <Link className="App-link" key={key} to={`/list/:${item}`}>
                   <div onClick={() => getCurrencyData(item)}>{item}</div>
                 </Link>
               )
