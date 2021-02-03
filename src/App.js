@@ -4,14 +4,17 @@ import {connect} from 'react-redux'
 import FormExample from './components/FormExample'
 import Matrix from './components/Matrix'
 import {Route, Switch, Link} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import {
   currencyListSelector,
   loadingErrorSelector,
-  initCurrencyList
+  initCurrencyList,
+  itemsSelector,
+  getDemoItems,
 } from './models/currency'
 
-function App({initCurrencyList, currencyList, loadingError}) {
+let App = ({initCurrencyList, currencyList, history, items, getDemoItems, loadingError}) => {
 
   useEffect(() => {
     initCurrencyList()
@@ -19,6 +22,7 @@ function App({initCurrencyList, currencyList, loadingError}) {
 
   const handleSubmit = (data) => {
     console.log(data)
+    history.push('/')
   }
 
   if(loadingError){
@@ -35,6 +39,11 @@ function App({initCurrencyList, currencyList, loadingError}) {
         <Link to="/list">currency list</Link>
         <Link to="/form">form</Link>
         <Link to="/matrix">matrix</Link>
+        <button onClick={() => getDemoItems()}>Set query</button>
+        {items && items.map((i) => {
+          return i.name
+        })}
+
         <Switch>
           <Route path="/list" render={() =>
             currencyList && currencyList.map((item, key) => {
@@ -45,16 +54,21 @@ function App({initCurrencyList, currencyList, loadingError}) {
           <Route path="/matrix" component={Matrix}/>
         </Switch>
 
-
       </header>
     </div>
   )
 }
 
-export default connect(state => ({
+
+App = connect(state => ({
   currencyList: currencyListSelector(state),
-  loadingError: loadingErrorSelector(state)
+  items: itemsSelector(state),
+  loadingError: loadingErrorSelector(state),
 }), {
-  initCurrencyList
+  initCurrencyList,
+  getDemoItems
 })(App)
 
+App = withRouter(App)
+
+export default App
